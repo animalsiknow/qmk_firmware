@@ -10,11 +10,15 @@
 #define kc_dquot ACTION_MODS_KEY(MOD_LSFT, KC_QUOT)
 #define kc_uscor ACTION_MODS_KEY(MOD_LSFT, KC_MINS)
 
+enum macro_id {
+  LOZENGE,
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           | RIGHT|   6  |   7  |   8  |   9  |   0  |   *    |
+ * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           | MENU |   6  |   7  |   8  |   9  |   0  |   *    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * |   "    |   Q  |   W  |   E  |   R  |   T  |  L1  |           |  L1  |   Y  |   U  |   I  |   O  |   P  |   _    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -45,14 +49,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                KC_HOME,
                                             KC_BSPC, KC_LCTRL, KC_LGUI,
         // right hand
-             KC_RGHT,     KC_6,   KC_7,   KC_8,   KC_9,   KC_0,             KC_ASTR,
-             TG(SYMB),    KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,             kc_uscor,
-                          KC_H,   KC_J,   KC_K,   KC_L,   KC_SCLN,          KC_MINS,
-             KC_BSLS,   KC_N,   KC_M,   KC_COMM,KC_DOT, KC_SLSH,          KC_PLUS,
-             LT(SYMB, KC_NO),LT(MDIA, KC_NO),KC_LBRC,KC_RBRC,          KC_ENT,
-             KC_LALT,        CTL_T(KC_ESC),
+             KC_SLCK,          KC_6,   KC_7,   KC_8,   KC_9,   KC_0,             KC_ASTR,
+             M(0),            KC_Y,   KC_U,   KC_I,   KC_O,   KC_P,             kc_uscor,
+                              KC_H,   KC_J,   KC_K,   KC_L,   KC_SCLN,          KC_MINS,
+             KC_BSLS,         KC_N,   KC_M,   KC_COMM,KC_DOT, KC_SLSH,          KC_PLUS,
+             LT(SYMB, KC_NO), LT(MDIA, KC_NO),KC_LBRC,KC_RBRC,          KC_ENT,
+             KC_LALT,         CTL_T(KC_ESC),
              KC_PGUP,
-             KC_RGUI, KC_RALT, KC_SPACE
+             KC_RGUI,         KC_RALT, KC_SPACE
     ),
 /* Keymap 1: Symbol Layer
  *
@@ -146,14 +150,13 @@ const uint16_t PROGMEM fn_actions[] = {
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
-  // MACRODOWN only works in this function
-      switch(id) {
-        case 0:
-        if (record->event.pressed) {
-          SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
+    switch(id) {
+    case LOZENGE:
+        if (!record->event.pressed) {
+            return MACRODOWN(END);
         }
-        break;
-      }
+        return MACRODOWN(TYPE(KC_SLCK), TYPE(KC_L), TYPE(KC_L), END);
+    }
     return MACRO_NONE;
 };
 
